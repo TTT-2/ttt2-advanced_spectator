@@ -35,7 +35,7 @@ if CLIENT then
         ASPECTATOR.player[ply:UserID()].wep_clip_max = net.ReadInt(16)
         ASPECTATOR.player[ply:UserID()].wep_ammo = net.ReadInt(16)
     end)
-    
+
     net.Receive('ttt2_net_aspectator_update_role', function()
         local ply = net.ReadEntity()
 
@@ -54,7 +54,7 @@ if CLIENT then
     end)
 
     function ASPECTATOR:GetRole(ply)
-        if ply and ply['UserID'] then
+        if ply and ply['UserID'] and self.player[ply:UserID()].role then
             return self.player[ply:UserID()].role
         else
             return GetRoleByIndex(1)
