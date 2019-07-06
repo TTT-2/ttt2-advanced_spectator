@@ -94,7 +94,7 @@ if SERVER then
     -- HOOKS
     hook.Add('PlayerSpawn', 'ttt2_aspectator_add_player', function(ply) 
         ASPECTATOR:AddPlayer(ply)
-        ASPECTATOR:UpdateRole(ply, ply:GetSubRole())
+        --ASPECTATOR:UpdateRole(ply, ply:GetSubRole())
     end)
     
     hook.Add('PlayerDeath', 'ttt2_aspectator_add_player', function(ply) 
@@ -110,7 +110,9 @@ if SERVER then
     end)
 
     hook.Add('TTT2UpdateSubrole', 'ttt2_aspectator_role_update', function(ply, old_role, new_role)
-        ASPECTATOR:UpdateRole(ply, new_role)
+        timer.Simple(0.05, function() -- add a short delay since the rolecolor is set after this hook is called
+            ASPECTATOR:UpdateRole(ply, new_role)
+        end)
     end)
 
     -- TIMER
