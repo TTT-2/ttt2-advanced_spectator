@@ -35,6 +35,7 @@ if CLIENT then
         ASPECTATOR.player[ply:UserID()].wep_clip_max = net.ReadInt(16)
         ASPECTATOR.player[ply:UserID()].wep_ammo = net.ReadInt(16)
     end)
+    
     net.Receive('ttt2_net_aspectator_update_role', function()
         local ply = net.ReadEntity()
 
@@ -50,10 +51,37 @@ if CLIENT then
         ASPECTATOR.player[ply:UserID()].role_c.g = net.ReadUInt(8)
         ASPECTATOR.player[ply:UserID()].role_c.b = net.ReadUInt(8)
         ASPECTATOR.player[ply:UserID()].role_c.a = net.ReadUInt(8)
-        
-        print(ASPECTATOR.player[ply:UserID()].ply:Nick())
-        print(ASPECTATOR.player[ply:UserID()].role.name)
-        PrintTable(ASPECTATOR.player[ply:UserID()].role_c)
     end)
 
+    function ASPECTATOR:GetRole(ply)
+        if ply and ply['UserID'] then
+            return self.player[ply:UserID()].role
+        else
+            return GetRoleByIndex(1)
+        end
+    end
+
+    function ASPECTATOR:GetRoleColor(ply)
+        if ply and ply['UserID'] then
+            return self.player[ply:UserID()].role_c
+        else
+            return GetRoleByIndex(1).color
+        end
+    end
+
+    function ASPECTATOR:GetPlayer(ply)
+        if ply and ply['UserID'] then
+            return self.player[ply:UserID()].ply
+        else
+            return LocalPlayer()
+        end
+    end
+
+    function ASPECTATOR:GetWeapon(ply)
+        if ply and ply['UserID'] then
+            return self.player[ply:UserID()].wep_clip, self.player[ply:UserID()].wep_clip_max, self.player[ply:UserID()].wep_ammo
+        else
+            return -1, -1, -1
+        end
+    end
 end

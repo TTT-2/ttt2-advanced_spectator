@@ -67,22 +67,13 @@ if CLIENT then -- CLIENT
         -- get target
         local tgt = LocalPlayer():GetObserverTarget()
 
-        -- data for HUD switcher
-        local tgt_data = {}
-        if tgt and tgt['UserID'] then
-            tgt_data = ASPECTATOR.player[tgt:UserID()]
-        else
-            tgt_data.role = GetRoleByIndex(1)
-            tgt_data.role_c = tgt_data.role.color
-        end
-
         local client = LocalPlayer()
 		local pos = self:GetPos()
 		local size = self:GetSize()
 		local x, y = pos.x, pos.y
         local w, h = size.w, size.h
         
-        local show_role = GetConVar('ttt_aspectator_display_role'):GetBool()
+        local show_role = GetGlobalBool("ttt_aspectator_display_role", true)
         if not show_role then
             h = h - rolesize
             y = y + rolesize
@@ -92,13 +83,13 @@ if CLIENT then -- CLIENT
         self:DrawBg(x, y, w, h, self.basecolor)
 
         if show_role then
-            local text = LANG.GetTranslation(tgt_data.role.name)
+            local text = LANG.GetTranslation(ASPECTATOR:GetRole(tgt).name)
             local tx = x + rolesize
             local ty = y + rolesize * 0.5
 
-            self:DrawBg(x, y, rolesize, h, tgt_data.role_c)
+            self:DrawBg(x, y, rolesize, h, ASPECTATOR:GetRoleColor(tgt))
 
-            local icon = Material("vgui/ttt/dynamic/roles/icon_" .. tgt_data.role.abbr)
+            local icon = Material("vgui/ttt/dynamic/roles/icon_" .. ASPECTATOR:GetRole(tgt).abbr)
             if icon then
                 util.DrawFilteredTexturedRect(x + 4, y + 4, rolesize - 8, rolesize - 8, icon)
             end
@@ -125,14 +116,12 @@ if CLIENT then -- CLIENT
         local spc = 7 * self.scale -- space between bars
 
         -- health bar
-        local health = math.max(0, tgt_data.ply:Health())
+        local health = math.max(0, ASPECTATOR:GetPlayer(tgt):Health())
 
-        print(tostring(math.max(0, tgt_data.ply:GetMaxHealth())))
-
-        self:DrawBar(bx, by, bw, bh, Color(234, 41, 41), health / math.max(0, tgt_data.ply:GetMaxHealth()), self.scale, "HEALTH: " .. health)
+        self:DrawBar(bx, by, bw, bh, Color(234, 41, 41), health / math.max(0, ASPECTATOR:GetPlayer(tgt):GetMaxHealth()), self.scale, "HEALTH: " .. health)
 
         -- Draw ammo
-        local clip, clip_max, ammo = tgt_data.wep_clip, tgt_data.wep_clip_max, tgt_data.wep_ammo
+        local clip, clip_max, ammo = ASPECTATOR:GetWeapon(tgt)
 
         if clip ~= -1 then
             local text = string.format("%i + %02i", clip, ammo)

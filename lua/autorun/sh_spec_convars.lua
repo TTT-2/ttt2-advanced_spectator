@@ -17,8 +17,11 @@ if SERVER then
     end)
 
     -- sync convars on change
-    cvars.AddChangeCallback("ttt_highlight_admins", function(cv, old, new)
-        SetGlobalBool("ttt_highlight_admins", tobool(tonumber(new)))
+    cvars.AddChangeCallback("ttt_aspectator_display_role", function(cv, old, new)
+        SetGlobalBool("ttt_aspectator_display_role", tobool(tonumber(new)))
+    end)
+    cvars.AddChangeCallback("ttt_aspectator_enable_wallhack", function(cv, old, new)
+        SetGlobalBool("ttt_aspectator_enable_wallhack", tobool(tonumber(new)))
     end)
 end
 
