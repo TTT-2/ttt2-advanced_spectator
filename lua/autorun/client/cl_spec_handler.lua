@@ -62,7 +62,7 @@ if CLIENT then
     end
 
     function ASPECTATOR:GetRoleColor(ply)
-        if ply and ply['UserID'] then
+        if ply and ply['UserID'] and self.player[ply:UserID()].role_c then
             return self.player[ply:UserID()].role_c
         else
             return GetRoleByIndex(1).color
@@ -70,7 +70,7 @@ if CLIENT then
     end
 
     function ASPECTATOR:GetPlayer(ply)
-        if ply and ply['UserID'] then
+        if ply and ply['UserID'] and self.player[ply:UserID()].ply then
             return self.player[ply:UserID()].ply
         else
             return LocalPlayer()

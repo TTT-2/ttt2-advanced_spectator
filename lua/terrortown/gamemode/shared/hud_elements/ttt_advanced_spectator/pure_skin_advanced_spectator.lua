@@ -34,8 +34,11 @@ if CLIENT then -- CLIENT
     end
 
     function HUDELEMENT:PerformLayout()
+        self.scale = self:GetHUDScale()
+
         self.basecolor = self:GetHUDBasecolor()
-        self.padding = padding * self.scale
+        self.padding = math.Round(padding * self.scale, 0)
+        self.rolesize = math.Round(rolesize * self.scale, 0)
 
 		BaseClass.PerformLayout(self)
 	end
@@ -55,11 +58,10 @@ if CLIENT then -- CLIENT
         local c = LocalPlayer()
         local tgt = c:GetObserverTarget()
 
-        local c_is_alive = c:Alive()
         local tgt_is_valid = IsValid(tgt) and tgt:IsPlayer()
         local tgt_is_synced_user = tgt and tgt['UserID'] and ASPECTATOR.player[tgt:UserID()]
 
-        return (tgt_is_valid and tgt_is_synced_user) or HUDEditor.IsEditing
+        return (tgt_is_valid and tgt_is_synced_user and GAMEMODE.round_state == ROUND_ACTIVE) or HUDEditor.IsEditing
 	end
     -- parameter overwrites end
 
@@ -75,8 +77,8 @@ if CLIENT then -- CLIENT
         
         local show_role = GetGlobalBool("ttt_aspectator_display_role", true)
         if not show_role then
-            h = h - rolesize
-            y = y + rolesize
+            h = h - self.rolesize
+            y = y + self.rolesize
         end
 
         -- draw bg
@@ -84,34 +86,34 @@ if CLIENT then -- CLIENT
 
         if show_role then
             local text = LANG.GetTranslation(ASPECTATOR:GetRole(tgt).name)
-            local tx = x + rolesize
-            local ty = y + rolesize * 0.5
+            local tx = x + self.rolesize
+            local ty = y + self.rolesize * 0.5
 
-            self:DrawBg(x, y, rolesize, h, ASPECTATOR:GetRoleColor(tgt))
+            self:DrawBg(x, y, self.rolesize, h, ASPECTATOR:GetRoleColor(tgt))
 
             local icon = Material("vgui/ttt/dynamic/roles/icon_" .. ASPECTATOR:GetRole(tgt).abbr)
             if icon then
-                util.DrawFilteredTexturedRect(x + 4, y + 4, rolesize - 8, rolesize - 8, icon)
+                util.DrawFilteredTexturedRect(x + 4, y + 4, self.rolesize - 8, self.rolesize - 8, icon)
             end
 
             --calculate the scale multplier for role text
 			surface.SetFont("PureSkinRole")
 
 			local role_text_width = surface.GetTextSize(string.upper(text)) * self.scale
-			local role_scale_multiplier = (self.size.w - rolesize - 2 * self.padding) / role_text_width
+			local role_scale_multiplier = (self.size.w - self.rolesize - 2 * self.padding) / role_text_width
 
 			role_scale_multiplier = math.Clamp(role_scale_multiplier, 0.55, 0.85) * self.scale
 			draw.AdvancedText(string.upper(text), "PureSkinRole", tx + self.padding, ty, self:GetDefaultFontColor(self.basecolor), TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER, true, Vector(role_scale_multiplier * 0.9, role_scale_multiplier, role_scale_multiplier))
         end
 
         -- draw dark bottom overlay
-        self:DrawBg(x, y + ((show_role == true) and rolesize or 0), w, h - ((show_role == true) and rolesize or 0), Color(0, 0, 0, 90))
+        self:DrawBg(x, y + ((show_role == true) and self.rolesize or 0), w, h - ((show_role == true) and self.rolesize or 0), Color(0, 0, 0, 90))
 
         -- draw bars
-        local bx = x + ((show_role == true) and rolesize or 0) + self.padding
-        local by = y + ((show_role == true) and rolesize or 0) + self.padding
+        local bx = x + ((show_role == true) and self.rolesize or 0) + self.padding
+        local by = y + ((show_role == true) and self.rolesize or 0) + self.padding
 
-        local bw = w - ((show_role == true) and rolesize or 0) - self.padding * 2 -- bar width
+        local bw = w - ((show_role == true) and self.rolesize or 0) - self.padding * 2 -- bar width
         local bh = 26 * self.scale --  bar height
         local spc = 7 * self.scale -- space between bars
 
