@@ -14,17 +14,29 @@ if SERVER then
 
         if not self.player[ply:UserID()] then return end
 
+        local wep_clip, wep_clip_max, wep_ammo = weapon:Clip1(), weapon:GetMaxClip1(), weapon:Ammo1()
+
+        -- check if values are numbers (e.g. snowball has a boolean for ammo)
+        if type(wep_clip) ~= 'number' then wep_clip = -1 end
+        if type(wep_clip_max) ~= 'number' then wep_clip_max = -1 end
+        if type(wep_ammo) ~= 'number' then wep_ammo = -1 end
+
+        -- make sure all values are integers
+        wep_clip = math.floor(wep_clip)
+        wep_clip_max = math.floor(wep_clip_max)
+        wep_ammo = math.floor(wep_ammo)
+
         self.player[ply:UserID()].weapon = weapon
-        self.player[ply:UserID()].wep_clip = weapon:Clip1()
-        self.player[ply:UserID()].wep_clip_max = weapon:GetMaxClip1()
-        self.player[ply:UserID()].wep_ammo = weapon:Ammo1()
+        self.player[ply:UserID()].wep_clip = wep_clip
+        self.player[ply:UserID()].wep_clip_max = wep_clip_max
+        self.player[ply:UserID()].wep_ammo = wep_ammo
 
         net.Start('ttt2_net_aspectator_change_weapon')
         net.WriteEntity(ply)
         net.WriteEntity(weapon)
-        net.WriteInt(weapon:Clip1(), 16)
-        net.WriteInt(weapon:GetMaxClip1(), 16)
-        net.WriteInt(weapon:Ammo1(), 16)
+        net.WriteInt(wep_clip, 16)
+        net.WriteInt(wep_clip_max, 16)
+        net.WriteInt(wep_ammo, 16)
         net.Send(player.GetAll())
     end
 
@@ -38,6 +50,16 @@ if SERVER then
         local wep_clip_new, wep_clip_max_new, wep_ammo_new = weapon:Clip1(), weapon:GetMaxClip1(), weapon:Ammo1()
 
         if not wep_clip or not wep_clip_max or not wep_ammo then return end
+
+        -- check if values are numbers (e.g. snowball has a boolean for ammo)
+        if type(wep_clip_new) ~= 'number' then wep_clip_new = -1 end
+        if type(wep_clip_max_new) ~= 'number' then wep_clip_max_new = -1 end
+        if type(wep_ammo_new) ~= 'number' then wep_ammo_new = -1 end
+
+        -- make sure all values are integers
+        wep_clip_new = math.floor(wep_clip_new)
+        wep_clip_max_new = math.floor(wep_clip_max_new)
+        wep_ammo_new = math.floor(wep_ammo_new)
 
         -- a value has changed
         if wep_clip ~= wep_clip_new or wep_clip_max ~= wep_clip_max_new or wep_ammo ~= wep_ammo_new then
