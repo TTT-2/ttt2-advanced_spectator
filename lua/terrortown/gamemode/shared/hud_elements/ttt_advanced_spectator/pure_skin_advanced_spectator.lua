@@ -57,6 +57,8 @@ if CLIENT then -- CLIENT
     function HUDELEMENT:ShouldDraw()
         local c = LocalPlayer()
         local tgt = c:GetObserverTarget()
+        
+        if GetGlobalBool('ttt_aspectator_admin_only', false) and not c:IsAdmin() then return false end
 
         local tgt_is_valid = IsValid(tgt) and tgt:IsPlayer()
         local tgt_is_synced_user = tgt and tgt['UserID'] and ASPECTATOR.player[tgt:UserID()]

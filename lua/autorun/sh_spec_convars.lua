@@ -1,9 +1,11 @@
 CreateConVar('ttt_aspectator_display_role', 1, {FCVAR_NOTIFY, FCVAR_ARCHIVE})
 CreateConVar('ttt_aspectator_enable_wallhack', 1, {FCVAR_NOTIFY, FCVAR_ARCHIVE})
+CreateConVar('ttt_aspectator_admin_only', 0, {FCVAR_NOTIFY, FCVAR_ARCHIVE})
 
 hook.Add('TTTUlxInitCustomCVar', 'TTTAdvancedSpectatorInitRWCVar', function(name)
 	ULib.replicatedWritableCvar('ttt_aspectator_display_role', 'rep_ttt_aspectator_display_role', GetConVar('ttt_aspectator_display_role'):GetBool(), true, false, name)
 	ULib.replicatedWritableCvar('ttt_aspectator_enable_wallhack', 'rep_ttt_aspectator_enable_wallhack', GetConVar('ttt_aspectator_enable_wallhack'):GetBool(), true, false, name)
+	ULib.replicatedWritableCvar('ttt_aspectator_admin_only', 'rep_ttt_aspectator_admin_only', GetConVar('ttt_aspectator_admin_only'):GetBool(), true, false, name)
 end)
 
 if SERVER then
@@ -14,6 +16,7 @@ if SERVER then
     hook.Add('TTT2SyncGlobals', 'ttt2_aspectator_sync_convars', function()
         SetGlobalBool("ttt_aspectator_display_role", GetConVar("ttt_aspectator_display_role"):GetBool())
         SetGlobalBool("ttt_aspectator_enable_wallhack", GetConVar("ttt_aspectator_enable_wallhack"):GetBool())
+        SetGlobalBool("ttt_aspectator_admin_only", GetConVar("ttt_aspectator_admin_only"):GetBool())
     end)
 
     -- sync convars on change
@@ -22,6 +25,9 @@ if SERVER then
     end)
     cvars.AddChangeCallback("ttt_aspectator_enable_wallhack", function(cv, old, new)
         SetGlobalBool("ttt_aspectator_enable_wallhack", tobool(tonumber(new)))
+    end)
+    cvars.AddChangeCallback("ttt_aspectator_admin_only", function(cv, old, new)
+        SetGlobalBool("ttt_aspectator_admin_only", tobool(tonumber(new)))
     end)
 end
 
@@ -42,6 +48,9 @@ if CLIENT then
 
 		local tttrsdh1 = xlib.makecheckbox{label = 'ttt_aspectator_display_role (Def. 1)', repconvar = 'rep_ttt_aspectator_display_role', parent = tttrslst}
 		tttrslst:AddItem(tttrsdh1)
+		
+		local tttrsdh2 = xlib.makecheckbox{label = 'ttt_aspectator_admin_only (Def. 0)', repconvar = 'rep_ttt_aspectator_admin_only', parent = tttrslst}
+		tttrslst:AddItem(tttrsdh2)
 
 		-- Popup
 		local tttrsclp2 = vgui.Create('DCollapsibleCategory', tttrspnl)
