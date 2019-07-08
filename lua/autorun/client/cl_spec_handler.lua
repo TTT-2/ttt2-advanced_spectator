@@ -6,7 +6,7 @@ if CLIENT then
         local id = net.ReadUInt(16)
         local ply = net.ReadEntity()
 
-        if not ply or not ply['UserID'] then return end
+        if not ply or not IsValid(ply) or not ply['UserID'] then return end
 
         ASPECTATOR.player[id] = {}
         ASPECTATOR.player[id].ply = ply
@@ -22,7 +22,7 @@ if CLIENT then
     net.Receive('ttt2_net_aspectator_change_weapon', function()
         local ply = net.ReadEntity()
 
-        if not ply or not ply['UserID'] then return end
+        if not ply or not IsValid(ply) or not ply['UserID'] then return end
 
         if not ASPECTATOR.player[ply:UserID()] then return end
         
@@ -35,7 +35,7 @@ if CLIENT then
     net.Receive('ttt2_net_aspectator_update_weapon', function()
         local ply = net.ReadEntity()
 
-        if not ply or not ply['UserID'] then return end
+        if not ply or not IsValid(ply) or not ply['UserID'] then return end
         
         if not ASPECTATOR.player[ply:UserID()] then return end
 
@@ -47,7 +47,7 @@ if CLIENT then
     net.Receive('ttt2_net_aspectator_update_role', function()
         local ply = net.ReadEntity()
 
-        if not ply or not ply['UserID'] then return end
+        if not ply or not IsValid(ply) or not ply['UserID'] then return end
         
         if not ASPECTATOR.player[ply:UserID()] then return end
 

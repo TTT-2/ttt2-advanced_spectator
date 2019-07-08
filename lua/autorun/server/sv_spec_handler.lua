@@ -9,6 +9,9 @@ if SERVER then
     ASPECTATOR.player = {}
 
     function ASPECTATOR:ChangeWeapon(ply, weapon)
+        if not ply or not IsValid(ply) then return end
+        if not weapon or not IsValid(weapon) then return end
+
         if not self.player[ply:UserID()] then return end
 
         self.player[ply:UserID()].weapon = weapon
@@ -28,10 +31,11 @@ if SERVER then
     function ASPECTATOR:CheckForChange(pobj)
         local ply, weapon = pobj.ply, pobj.weapon
 
-        if not ply or not weapon then return end
+        if not ply or not IsValid(ply) then return end
+        if not weapon or not IsValid(weapon) then return end
 
         local wep_clip, wep_clip_max, wep_ammo = pobj.wep_clip, pobj.wep_clip_max, pobj.wep_ammo
-        local wep_clip_new, wep_clip_max_new, wep_ammo_new = pobj.weapon:Clip1(), pobj.weapon:GetMaxClip1(), pobj.weapon:Ammo1()
+        local wep_clip_new, wep_clip_max_new, wep_ammo_new = weapon:Clip1(), weapon:GetMaxClip1(), weapon:Ammo1()
 
         if not wep_clip or not wep_clip_max or not wep_ammo then return end
 
@@ -40,20 +44,22 @@ if SERVER then
 
             if not self.player[ply:UserID()] then return end
 
-            self.player[ply:UserID()].wep_clip = weapon:Clip1()
-            self.player[ply:UserID()].wep_clip_max = weapon:GetMaxClip1()
-            self.player[ply:UserID()].wep_ammo = weapon:Ammo1()
+            self.player[ply:UserID()].wep_clip = wep_clip_new
+            self.player[ply:UserID()].wep_clip_max = wep_clip_max_new
+            self.player[ply:UserID()].wep_ammo = wep_ammo_new
             
             net.Start('ttt2_net_aspectator_update_weapon')
             net.WriteEntity(ply)
-            net.WriteInt(weapon:Clip1(), 16)
-            net.WriteInt(weapon:GetMaxClip1(), 16)
-            net.WriteInt(weapon:Ammo1(), 16)
+            net.WriteInt(wep_clip_new, 16)
+            net.WriteInt(wep_clip_max_new, 16)
+            net.WriteInt(wep_ammo_new, 16)
             net.Send(player.GetAll())
         end
     end
 
     function ASPECTATOR:AddPlayer(ply)
+        if not ply or not IsValid(ply) then return end
+
         self.player[ply:UserID()] = {}
         self.player[ply:UserID()].ply = ply
 
@@ -64,6 +70,8 @@ if SERVER then
     end
 
     function ASPECTATOR:RemovePlayer(ply)
+        if not ply or not IsValid(ply) then return end
+        
         self.player[ply:UserID()] = nil
 
         net.Start('ttt2_net_aspectator_remove_player')
@@ -72,6 +80,8 @@ if SERVER then
     end
 
     function ASPECTATOR:UpdateRole(ply, role)
+        if not ply or not IsValid(ply) then return end
+
         if not self.player[ply:UserID()] then return end
 
         self.player[ply:UserID()].role = role
