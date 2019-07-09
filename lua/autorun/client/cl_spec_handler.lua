@@ -59,7 +59,29 @@ if CLIENT then
         ASPECTATOR.player[ply:UserID()].role_c.g = net.ReadUInt(8)
         ASPECTATOR.player[ply:UserID()].role_c.b = net.ReadUInt(8)
         ASPECTATOR.player[ply:UserID()].role_c.a = net.ReadUInt(8)
+
+        -- add stencils
+        ASPECTATOR:AddStencil(ply, ASPECTATOR.player[ply:UserID()].role_c)
     end)
+
+    net.Receive('ttt2_net_aspectator_start_wallhack', function()
+        for _, pobj in pairs(ASPECTATOR.player) do
+            ASPECTATOR:AddStencil(pobj.ply, pobj.role_c)
+        end
+    end)
+
+    function ASPECTATOR:AddStencil(ply, clr)
+        timer.Simple(0.1, function() 
+            if not LocalPlayer():IsSpec() then return end
+            if not GetGlobalBool('ttt_aspectator_enable_wallhack', true) then return end
+
+            if not GetGlobalBool('ttt_aspectator_display_wallhack_role', true) then
+                clr = Color(255, 50, 50)
+            end
+
+            marks.Add({ply}, clr)
+        end)
+    end
 
     function ASPECTATOR:GetRole(ply)
         if ply and ply['UserID'] and self.player[ply:UserID()].role then
@@ -92,4 +114,8 @@ if CLIENT then
             return -1, -1, -1
         end
     end
+
+    hook.Add('TTTBeginRound', 'ttt2_aspectator_clear_stencil', function()
+        marks.Remove(player.GetAll())
+    end)
 end

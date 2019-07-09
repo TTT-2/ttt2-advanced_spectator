@@ -4,6 +4,7 @@ if SERVER then
     util.AddNetworkString('ttt2_net_aspectator_update_role')
     util.AddNetworkString('ttt2_net_aspectator_add_player')
     util.AddNetworkString('ttt2_net_aspectator_remove_player')
+    util.AddNetworkString('ttt2_net_aspectator_start_wallhack')
 
     ASPECTATOR = {}
     ASPECTATOR.player = {}
@@ -123,6 +124,11 @@ if SERVER then
         net.Send(player.GetAll())
     end
 
+    function ASPECTATOR:StartWallhack(ply)
+        net.Start('ttt2_net_aspectator_start_wallhack')
+        net.Send(ply)
+    end
+
     -- HOOKS
     hook.Add('PlayerSpawn', 'ttt2_aspectator_add_player', function(ply) 
         ASPECTATOR:AddPlayer(ply)
@@ -131,6 +137,7 @@ if SERVER then
     
     hook.Add('PlayerDeath', 'ttt2_aspectator_add_player', function(ply) 
         ASPECTATOR:RemovePlayer(ply)
+        ASPECTATOR:StartWallhack(ply)
     end)
     
     hook.Add('PlayerDisconnected', 'ttt2_aspectator_change_remove_player', function(ply) 
