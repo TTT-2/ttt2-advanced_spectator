@@ -69,6 +69,9 @@ if CLIENT then
             ASPECTATOR:AddStencil(pobj.ply, pobj.role_c)
         end
     end)
+    net.Receive('ttt2_net_aspectator_stop_wallhack', function()
+        marks.Remove(player.GetAll())
+    end)
 
     function ASPECTATOR:AddStencil(ply, clr)
         timer.Simple(0.1, function() 
@@ -114,8 +117,4 @@ if CLIENT then
             return -1, -1, -1
         end
     end
-
-    hook.Add('TTTBeginRound', 'ttt2_aspectator_clear_stencil', function()
-        marks.Remove(player.GetAll())
-    end)
 end
