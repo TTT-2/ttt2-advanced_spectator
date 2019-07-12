@@ -112,6 +112,16 @@ if CLIENT then
 
     function ASPECTATOR:GetWeapon(ply)
         if ply and ply['UserID'] then
+            if not self.player[ply:UserID()].wep_clip then
+                self.player[ply:UserID()].wep_clip = -1
+            end
+            if not self.player[ply:UserID()].wep_clip_max then
+                self.player[ply:UserID()].wep_clip_max = -1
+            end
+            if not self.player[ply:UserID()].wep_ammo then
+                self.player[ply:UserID()].wep_ammo = -1
+            end
+
             return self.player[ply:UserID()].wep_clip, self.player[ply:UserID()].wep_clip_max, self.player[ply:UserID()].wep_ammo
         else
             return -1, -1, -1
