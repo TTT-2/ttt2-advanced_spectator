@@ -61,9 +61,8 @@ if CLIENT then -- CLIENT
         if GetGlobalBool('ttt_aspectator_admin_only', false) and not c:IsAdmin() then return false end
 
         local tgt_is_valid = IsValid(tgt) and tgt:IsPlayer()
-        local tgt_is_synced_user = tgt and tgt['UserID'] and ASPECTATOR.player[tgt:UserID()]
 
-        return (tgt_is_valid and tgt_is_synced_user and GAMEMODE.round_state == ROUND_ACTIVE) or HUDEditor.IsEditing
+        return (tgt_is_valid and GAMEMODE.round_state == ROUND_ACTIVE) or HUDEditor.IsEditing
 	end
     -- parameter overwrites end
 
@@ -87,13 +86,13 @@ if CLIENT then -- CLIENT
         self:DrawBg(x, y, w, h, self.basecolor)
 
         if show_role then
-            local text = LANG.GetTranslation(ASPECTATOR:GetRole(tgt).name)
+            local text = LANG.GetTranslation(tgt:AS_GetRole().name)
             local tx = x + self.rolesize
             local ty = y + self.rolesize * 0.5
 
-            self:DrawBg(x, y, self.rolesize, h, ASPECTATOR:GetRoleColor(tgt))
+            self:DrawBg(x, y, self.rolesize, h, tgt:AS_GetRoleColor())
 
-            local icon = Material("vgui/ttt/dynamic/roles/icon_" .. ASPECTATOR:GetRole(tgt).abbr)
+            local icon = Material("vgui/ttt/dynamic/roles/icon_" .. tgt:AS_GetRole().abbr)
             if icon then
                 util.DrawFilteredTexturedRect(x + 4, y + 4, self.rolesize - 8, self.rolesize - 8, icon)
             end
@@ -120,12 +119,12 @@ if CLIENT then -- CLIENT
         local spc = 7 * self.scale -- space between bars
 
         -- health bar
-        local health = math.max(0, ASPECTATOR:GetPlayer(tgt):Health())
+        local health = math.max(0, tgt:Health())
 
-        self:DrawBar(bx, by, bw, bh, Color(234, 41, 41), health / math.max(0, ASPECTATOR:GetPlayer(tgt):GetMaxHealth()), self.scale, "HEALTH: " .. health)
+        self:DrawBar(bx, by, bw, bh, Color(234, 41, 41), health / math.max(0, tgt:GetMaxHealth()), self.scale, "HEALTH: " .. health)
 
         -- Draw ammo
-        local clip, clip_max, ammo = ASPECTATOR:GetWeapon(tgt)
+        local clip, clip_max, ammo = tgt:AS_GetWeapon()
 
         if clip ~= -1 then
             local text = string.format("%i + %02i", clip, ammo)
