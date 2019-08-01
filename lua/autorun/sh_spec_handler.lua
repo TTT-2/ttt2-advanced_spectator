@@ -54,7 +54,7 @@ end
 
 function plymeta:AS_GetRole()
     if not self.as_role then
-        return GetRoleByIndex(1)
+        return roles.GetByIndex(1)
     end
 
     return self.as_role

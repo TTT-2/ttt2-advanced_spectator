@@ -1,6 +1,7 @@
 if SERVER then
     util.AddNetworkString('ttt2_net_aspectator_start_wallhack')
     util.AddNetworkString('ttt2_net_aspectator_stop_wallhack')
+    util.AddNetworkString('ttt2_net_aspectator_request_initial_data')
 
     ASPECTATOR = {}
 
@@ -50,8 +51,17 @@ if SERVER then
         ASPECTATOR:StopWallhack(ply)
     end)
 
-    hook.Add('TTTBeginRound', 'ttt2_aspectator_begin_round', function(ply)
-        ASPECTATOR:StopWallhack(ply)
+    hook.Add('TTTBeginRound', 'ttt2_aspectator_begin_round', function()
+        for _, p in pairs(player.GetAll()) do
+            ASPECTATOR:StopWallhack(p)
+            
+            -- start wallhack when player is spectator!
+            if p:IsSpec() then
+                timer.Simple(0.25, function() -- wait until role is set
+                    ASPECTATOR:StartWallhack(p)
+                end)
+            end
+        end
     end)
 
     hook.Add('PlayerSwitchWeapon', 'ttt2_aspectator_change_weapon_switch', function(ply, old_weapon, new_weapon) 
@@ -59,6 +69,8 @@ if SERVER then
     end)
 
     hook.Add('TTT2UpdateSubrole', 'ttt2_aspectator_role_update', function(ply, old_role, new_role)
+        if not ply or not IsValid(ply) or not ply:IsPlayer() then return end
+
         timer.Simple(0.1, function() -- add a short delay since the rolecolor is set after this hook is called
             ply:AS_UpdateRole(new_role, ply:GetRoleColor())
         end)
@@ -69,5 +81,29 @@ if SERVER then
         for _, p in pairs(player.GetAll()) do
             ASPECTATOR:CheckForWeaponChange(p, p:GetActiveWeapon())
         end
+    end)
+
+    -- send data to player who connected while round was active
+    net.Receive('ttt2_net_aspectator_request_initial_data', function()
+        local ply = net.ReadEntity()
+
+        print("Send data to " .. ply:Nick())
+        
+        -- send full status update for players that connect after round has begun
+        for _, p in pairs(player.GetAll()) do
+            if p and IsValid(p) and p:IsPlayer() then
+
+                -- set current role
+                p:AS_UpdateRole(p:GetSubRole(), p:GetRoleColor())
+
+                -- set current weapon data
+                local weapon = p:GetActiveWeapon()
+                if weapon and IsValid(weapon) then
+                    p:AS_UpdateWeapon(weapon:Clip1(), weapon:GetMaxClip1(), weapon:Ammo1())
+                end
+            end
+        end
+
+        ASPECTATOR:StartWallhack(ply)
     end)
 end
