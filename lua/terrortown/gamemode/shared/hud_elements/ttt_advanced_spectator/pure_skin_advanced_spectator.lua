@@ -70,6 +70,11 @@ if CLIENT then -- CLIENT
         -- get target
         local tgt = LocalPlayer():GetObserverTarget()
 
+        -- fallback for HUD switcher
+        if not IsValid(tgt) or not tgt:IsPlayer() then
+            tgt = LocalPlayer()
+        end
+
         local client = LocalPlayer()
 		local pos = self:GetPos()
 		local size = self:GetSize()
