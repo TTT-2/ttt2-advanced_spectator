@@ -86,8 +86,6 @@ if SERVER then
     -- send data to player who connected while round was active
     net.Receive('ttt2_net_aspectator_request_initial_data', function()
         local ply = net.ReadEntity()
-
-        print("Send data to " .. ply:Nick())
         
         -- send full status update for players that connect after round has begun
         for _, p in pairs(player.GetAll()) do

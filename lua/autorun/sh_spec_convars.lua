@@ -38,7 +38,7 @@ if SERVER then
 end
 
 if CLIENT then
-	hook.Add('TTTUlxModifySettings', 'TTTAdvancedSpectatorModifySettings', function(name)
+	hook.Add('TTTUlxModifyAddonSettings', 'TTTAdvancedSpectatorModifySettings', function(name)
 		local tttrspnl = xlib.makelistlayout{w = 415, h = 318, parent = xgui.null}
 
 		-- Chat Messages 
