@@ -72,6 +72,8 @@ if SERVER then
         if not ply or not IsValid(ply) or not ply:IsPlayer() then return end
 
         timer.Simple(0.1, function() -- add a short delay since the rolecolor is set after this hook is called
+            if not ply or not IsValid(ply) then return end
+            
             ply:AS_UpdateRole(new_role, ply:GetRoleColor())
         end)
     end)
