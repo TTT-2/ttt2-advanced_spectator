@@ -91,13 +91,13 @@ if CLIENT then -- CLIENT
         self:DrawBg(x, y, w, h, self.basecolor)
 
         if show_role then
-            local text = LANG.GetTranslation(tgt:AS_GetRole().name)
+            local text = LANG.GetTranslation(tgt:AS_GetRoleData().name)
             local tx = x + self.rolesize
             local ty = y + self.rolesize * 0.5
 
             self:DrawBg(x, y, self.rolesize, h, tgt:AS_GetRoleColor())
 
-            local icon = tgt:AS_GetRole().iconMaterial
+            local icon = tgt:AS_GetRoleData().iconMaterial
             if icon then
                 util.DrawFilteredTexturedRect(x + 4, y + 4, self.rolesize - 8, self.rolesize - 8, icon)
             end

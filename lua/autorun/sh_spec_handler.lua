@@ -52,7 +52,7 @@ function plymeta:AS_GetRoleColor()
     return self.as_color
 end
 
-function plymeta:AS_GetRole()
+function plymeta:AS_GetRoleData()
     if not self.as_role then
         return roles.GetByIndex(1)
     end
