@@ -101,6 +101,8 @@ if CLIENT then
         if not client or not IsValid(client) then return end
         if not client:IsAdmin() then return end
 
+        if not ASPECTATOR.admin_wallhack_enabled then return end
+
         text = LANG.GetTranslation("ttt2_aspectator_stopped_wallack")
         chat.AddText("[TTT2] Advanced Spectator: ", COLOR_WHITE, text)
 
