@@ -6,10 +6,10 @@ HUDELEMENT.Base = base
 
 if CLIENT then -- CLIENT
     local const_defaults = {
-		basepos = {x = 0, y = 0},
-		size = {w = 365, h = 128},
-		minsize = {w = 225, h = 128}
-	}
+        basepos = {x = 0, y = 0},
+        size = {w = 365, h = 128},
+        minsize = {w = 225, h = 128}
+    }
 
     local rolesize = 44
     local padding = 10
@@ -24,13 +24,13 @@ if CLIENT then -- CLIENT
 
         -- set as fallback default, other skins have to be set to true!
         self.disabledUnlessForced = false
-	end
+    end
 
     function HUDELEMENT:Initialize()
-		self.scale = 1.0
-		self.basecolor = self:GetHUDBasecolor()
+        self.scale = 1.0
+        self.basecolor = self:GetHUDBasecolor()
 
-		BaseClass.Initialize(self)
+        BaseClass.Initialize(self)
     end
 
     function HUDELEMENT:PerformLayout()
@@ -40,18 +40,18 @@ if CLIENT then -- CLIENT
         self.padding = math.Round(padding * self.scale, 0)
         self.rolesize = math.Round(rolesize * self.scale, 0)
 
-		BaseClass.PerformLayout(self)
-	end
-    
+        BaseClass.PerformLayout(self)
+    end
+
     function HUDELEMENT:GetDefaults()
-		const_defaults["basepos"] = {x = 10 * self.scale, y = ScrH() - ((64) * self.scale + self.size.h)}
+        const_defaults["basepos"] = {x = 10 * self.scale, y = ScrH() - ((64) * self.scale + self.size.h)}
 
-		return const_defaults
-	end
+        return const_defaults
+    end
 
-	-- parameter overwrites
-	function HUDELEMENT:IsResizable()
-		return true, false
+    -- parameter overwrites
+    function HUDELEMENT:IsResizable()
+        return true, false
     end
 
     function HUDELEMENT:ShouldDraw()
@@ -63,7 +63,7 @@ if CLIENT then -- CLIENT
         local tgt_is_valid = IsValid(tgt) and tgt:IsPlayer()
 
         return (tgt_is_valid and GAMEMODE.round_state == ROUND_ACTIVE) or HUDEditor.IsEditing
-	end
+    end
     -- parameter overwrites end
 
     function HUDELEMENT:Draw()
@@ -76,9 +76,9 @@ if CLIENT then -- CLIENT
         end
 
         local client = LocalPlayer()
-		local pos = self:GetPos()
-		local size = self:GetSize()
-		local x, y = pos.x, pos.y
+        local pos = self:GetPos()
+        local size = self:GetSize()
+        local x, y = pos.x, pos.y
         local w, h = size.w, size.h
         
         local show_role = GetGlobalBool("ttt_aspectator_display_role", true)
@@ -99,17 +99,17 @@ if CLIENT then -- CLIENT
 
             local icon = tgt:AS_GetRoleData().iconMaterial
             if icon then
-                util.DrawFilteredTexturedRect(x + 4, y + 4, self.rolesize - 8, self.rolesize - 8, icon)
+                draw.FilteredShadowedTexture(x + 4, y + 4, self.rolesize - 8, self.rolesize - 8, icon, 255, draw.GetDefaultColor(tgt:AS_GetRoleColor()), self.scale)
             end
 
             --calculate the scale multplier for role text
-			surface.SetFont("PureSkinRole")
+            surface.SetFont("PureSkinRole")
 
-			local role_text_width = surface.GetTextSize(string.upper(text)) * self.scale
-			local role_scale_multiplier = (self.size.w - self.rolesize - 2 * self.padding) / role_text_width
+            local role_text_width = surface.GetTextSize(string.upper(text)) * self.scale
+            local role_scale_multiplier = (self.size.w - self.rolesize - 2 * self.padding) / role_text_width
 
-			role_scale_multiplier = math.Clamp(role_scale_multiplier, 0.55, 0.85) * self.scale
-			draw.AdvancedText(string.upper(text), "PureSkinRole", tx + self.padding, ty, self:GetDefaultFontColor(self.basecolor), TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER, true, Vector(role_scale_multiplier * 0.9, role_scale_multiplier, role_scale_multiplier))
+            role_scale_multiplier = math.Clamp(role_scale_multiplier, 0.55, 0.85) * self.scale
+            draw.AdvancedText(string.upper(text), "PureSkinRole", tx + self.padding, ty, draw.GetDefaultColor(self.basecolor), TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER, true, Vector(role_scale_multiplier * 0.9, role_scale_multiplier, role_scale_multiplier))
         end
 
         -- draw dark bottom overlay
