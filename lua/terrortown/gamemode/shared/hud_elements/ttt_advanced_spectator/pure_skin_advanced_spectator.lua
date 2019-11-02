@@ -99,7 +99,7 @@ if CLIENT then -- CLIENT
 
             local icon = tgt:AS_GetRoleData().iconMaterial
             if icon then
-                draw.FilteredShadowedTexture(x + 4, y + 4, self.rolesize - 8, self.rolesize - 8, icon, 255, draw.GetDefaultColor(tgt:AS_GetRoleColor()), self.scale)
+                draw.FilteredShadowedTexture(x + 4, y + 4, self.rolesize - 8, self.rolesize - 8, icon, 255, util.GetDefaultColor(tgt:AS_GetRoleColor()), self.scale)
             end
 
             --calculate the scale multplier for role text
@@ -109,7 +109,7 @@ if CLIENT then -- CLIENT
             local role_scale_multiplier = (self.size.w - self.rolesize - 2 * self.padding) / role_text_width
 
             role_scale_multiplier = math.Clamp(role_scale_multiplier, 0.55, 0.85) * self.scale
-            draw.AdvancedText(string.upper(text), "PureSkinRole", tx + self.padding, ty, draw.GetDefaultColor(self.basecolor), TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER, true, Vector(role_scale_multiplier * 0.9, role_scale_multiplier, role_scale_multiplier))
+            draw.AdvancedText(string.upper(text), "PureSkinRole", tx + self.padding, ty, util.GetDefaultColor(self.basecolor), TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER, true, Vector(role_scale_multiplier * 0.9, role_scale_multiplier, role_scale_multiplier))
         end
 
         -- draw dark bottom overlay
