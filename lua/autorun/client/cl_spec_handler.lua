@@ -25,8 +25,6 @@ if CLIENT then
         end)
     end
 
-
-
     hook.Add('SetupMove', 'ttt2_aspectator_request_initial_data', function()
         if not LocalPlayer() or not IsValid(LocalPlayer()) or not LocalPlayer():IsPlayer() then return end
 
@@ -42,16 +40,16 @@ if CLIENT then
     -- ADMIN ONLY TOGLLEABLE WALLHACK
 
     hook.Add('Initialize', 'ttt2_aspectator_lang_and_bind', function()
-        LANG.AddToLanguage("English", "ttt2_aspectator_wallhack", "Toggle Admin Wallhack")
-        LANG.AddToLanguage("Deutsch", "ttt2_aspectator_wallhack", "Schalte Admin-Wallhack um")
+        LANG.AddToLanguage('English', 'ttt2_aspectator_wallhack', 'Toggle Admin Wallhack')
+        LANG.AddToLanguage('Deutsch', 'ttt2_aspectator_wallhack', 'Schalte Admin-Wallhack um')
 
-        LANG.AddToLanguage("English", "ttt2_aspectator_started_wallack", "Started admin only wallhack.")
-        LANG.AddToLanguage("Deutsch", "ttt2_aspectator_started_wallack", "Admin-only Wallhack gestartet.")
+        LANG.AddToLanguage('English', 'ttt2_aspectator_started_wallack', 'Started admin only wallhack.')
+        LANG.AddToLanguage('Deutsch', 'ttt2_aspectator_started_wallack', 'Admin-only Wallhack gestartet.')
 
-        LANG.AddToLanguage("English", "ttt2_aspectator_stopped_wallack", "Stopped admin only wallhack.")
-        LANG.AddToLanguage("Deutsch", "ttt2_aspectator_stopped_wallack", "Admin-only Wallhack gestoppt.")
-        
-        bind.Register("ttt2_aspectator_wallhack", function()
+        LANG.AddToLanguage('English', 'ttt2_aspectator_stopped_wallack', 'Stopped admin only wallhack.')
+        LANG.AddToLanguage('Deutsch', 'ttt2_aspectator_stopped_wallack', 'Admin-only Wallhack gestoppt.')
+
+        bind.Register('ttt2_aspectator_wallhack', function()
             if not GetGlobalBool('ttt_aspectator_admin_wallhack') then return end
 
             local client = LocalPlayer()
@@ -62,20 +60,20 @@ if CLIENT then
             -- toggle wallhack now
             ASPECTATOR.admin_wallhack_enabled = not ASPECTATOR.admin_wallhack_enabled
 
-            local text = ""
+            local text = ''
 
             if ASPECTATOR.admin_wallhack_enabled then
-                text = LANG.GetTranslation("ttt2_aspectator_started_wallack")
+                text = LANG.GetTranslation('ttt2_aspectator_started_wallack')
                 for _, p in pairs(player.GetAll()) do
                     ASPECTATOR:AddStencil(p, p:AS_GetRoleColor(), true)
                 end
             else
-                text = LANG.GetTranslation("ttt2_aspectator_stopped_wallack")
+                text = LANG.GetTranslation('ttt2_aspectator_stopped_wallack')
                 marks.Remove(player.GetAll())
             end
 
-            chat.AddText("[TTT2] Advanced Spectator: ", COLOR_WHITE, text)
-        end, nil, nil, "ttt2_aspectator_wallhack")
+            chat.AddText('[TTT2] Advanced Spectator: ', COLOR_WHITE, text)
+        end, nil, nil, 'ttt2_aspectator_wallhack')
     end)
 
     hook.Add('PostDrawTranslucentRenderables', 'ttt2_aspectator_draw_overhad_icons', function(bDepth, bSkybox)
@@ -103,8 +101,8 @@ if CLIENT then
 
         if not ASPECTATOR.admin_wallhack_enabled then return end
 
-        text = LANG.GetTranslation("ttt2_aspectator_stopped_wallack")
-        chat.AddText("[TTT2] Advanced Spectator: ", COLOR_WHITE, text)
+        text = LANG.GetTranslation('ttt2_aspectator_stopped_wallack')
+        chat.AddText('[TTT2] Advanced Spectator: ', COLOR_WHITE, text)
 
         ASPECTATOR.admin_wallhack_enabled = false
     end
