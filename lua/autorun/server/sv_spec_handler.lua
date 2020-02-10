@@ -85,8 +85,8 @@ timer.Create("ttt2_aspectator_recheck_weapon", 0.5, 0, function()
 end)
 
 -- send data to player who connected while round was active
-net.Receive("ttt2_net_aspectator_request_initial_data", function()
-	local ply = net.ReadEntity()
+hook.Add("TTT2PlayerReady", "ttt2_aspectator_player_ready", function(ply)
+	if not IsValid(ply) then return end
 
 	-- send full status update for players that connect after round has begun
 	for _, p in pairs(player.GetAll()) do
