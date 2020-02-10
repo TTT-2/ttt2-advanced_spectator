@@ -11,6 +11,12 @@ if CLIENT then -- CLIENT
 		minsize = {w = 225, h = 128}
 	}
 
+	local icon_armor = Material("vgui/ttt/hud_armor")
+	local icon_armor_rei = Material("vgui/ttt/hud_armor_reinforced")
+
+	local color_health = Color(234, 41, 41)
+	local color_ammo = Color(238, 151, 0)
+
 	local rolesize = 44
 	local padding = 10
 
@@ -125,7 +131,27 @@ if CLIENT then -- CLIENT
 		-- health bar
 		local health = math.max(0, tgt:Health())
 
-		self:DrawBar(bx, by, bw, bh, Color(234, 41, 41), health / math.max(0, tgt:GetMaxHealth()), self.scale, "HEALTH: " .. health)
+		self:DrawBar(bx, by, bw, bh, color_health, health / math.max(0, tgt:GetMaxHealth()), self.scale, "HEALTH: " .. health)
+
+		-- draw armor information
+		local armor = tgt:AS_GetArmor()
+
+		if not GetGlobalBool("ttt_armor_classic", false) and armor > 0 then
+			local icon_mat = tgt:AS_ArmorIsReinforced() and icon_armor_rei or icon_armor
+
+			local a_size = bh - math.Round(11 * self.scale)
+			local a_pad = math.Round(5 * self.scale)
+
+			local a_pos_y = by + a_pad
+			local a_pos_x = bx + bw - math.Round(65 * self.scale)
+
+			local at_pos_y = by + 1
+			local at_pos_x = a_pos_x + a_size + a_pad
+
+			draw.FilteredShadowedTexture(a_pos_x, a_pos_y, a_size, a_size, icon_mat, 255, COLOR_WHITE, self.scale)
+
+			draw.AdvancedText(armor, "PureSkinBar", at_pos_x, at_pos_y, util.GetDefaultColor(color_health), TEXT_ALIGN_LEFT, TEXT_ALIGN_LEFT, true, self.scale)
+		end
 
 		-- Draw ammo
 		local clip, clip_max, ammo = tgt:AS_GetWeapon()
@@ -133,7 +159,7 @@ if CLIENT then -- CLIENT
 		if clip ~= -1 then
 			local text = string.format("%i + %02i", clip, ammo)
 
-			self:DrawBar(bx, by + bh + spc, bw, bh, Color(238, 151, 0), clip / clip_max, self.scale, text)
+			self:DrawBar(bx, by + bh + spc, bw, bh, color_ammo, clip / clip_max, self.scale, text)
 		end
 
 		-- draw border and shadow

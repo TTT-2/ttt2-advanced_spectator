@@ -5,8 +5,7 @@ util.AddNetworkString("ttt2_net_aspectator_request_initial_data")
 ASPECTATOR = {}
 
 function ASPECTATOR:CheckForWeaponChange(ply, weapon)
-	if not ply or not IsValid(ply) then return end
-	if not weapon or not IsValid(weapon) then return end
+	if not IsValid(ply) or not IsValid(weapon) then return end
 
 	local wep_clip, wep_clip_max, wep_ammo = ply:AS_GetWeapon()
 	local wep_clip_new, wep_clip_max_new, wep_ammo_new = weapon:Clip1(), weapon:GetMaxClip1(), weapon:Ammo1()
@@ -24,6 +23,14 @@ function ASPECTATOR:CheckForWeaponChange(ply, weapon)
 	-- a value has changed
 	if wep_clip ~= wep_clip_new or wep_clip_max ~= wep_clip_max_new or wep_ammo ~= wep_ammo_new then
 		ply:AS_UpdateWeapon(wep_clip_new, wep_clip_max_new, wep_ammo_new)
+	end
+end
+
+function ASPECTATOR:CheckForArmorChange(ply)
+	if not IsValid(ply) then return end
+
+	if ply:AS_GetArmor() ~= ply:GetArmor() then
+		ply:AS_UpdateArmor(ply:GetArmor())
 	end
 end
 
@@ -81,6 +88,7 @@ end)
 timer.Create("ttt2_aspectator_recheck_weapon", 0.5, 0, function()
 	for _, p in pairs(player.GetAll()) do
 		ASPECTATOR:CheckForWeaponChange(p, p:GetActiveWeapon())
+		ASPECTATOR:CheckForArmorChange(p)
 	end
 end)
 

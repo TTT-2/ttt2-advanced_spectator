@@ -3,6 +3,7 @@
 if SERVER then
 	util.AddNetworkString("ttt2_net_aspectator_update_weapon")
 	util.AddNetworkString("ttt2_net_aspectator_update_role")
+	util.AddNetworkString("ttt2_net_aspectator_update_armor")
 end
 
 local plymeta = FindMetaTable("Player")
@@ -19,7 +20,19 @@ function plymeta:AS_UpdateWeapon(clip, clip_max, ammo)
 		net.WriteInt(clip, 16)
 		net.WriteInt(clip_max, 16)
 		net.WriteInt(ammo, 16)
-		net.Send(player.GetAll())
+		net.Broadcast()
+	end
+end
+
+function plymeta:AS_UpdateArmor(armor)
+	self.as_armor = armor
+
+	-- send data to client
+	if SERVER then
+		net.Start("ttt2_net_aspectator_update_armor")
+		net.WriteEntity(self)
+		net.WriteInt(armor, 16)
+		net.Broadcast()
 	end
 end
 
@@ -36,12 +49,20 @@ function plymeta:AS_UpdateRole(role, color)
 		net.WriteUInt(color.g, 8)
 		net.WriteUInt(color.b, 8)
 		net.WriteUInt(color.a, 8)
-		net.Send(player.GetAll())
+		net.Broadcast()
 	end
 end
 
 function plymeta:AS_GetWeapon()
 	return self.as_wep_clip or -1, self.as_wep_clip_max or -1, self.as_wep_ammo or -1
+end
+
+function plymeta:AS_GetArmor()
+	return self.as_armor or 0
+end
+
+function plymeta:AS_ArmorIsReinforced()
+	return GetGlobalBool("ttt_armor_enable_reinforced", false) and self:AS_GetArmor() > GetGlobalInt("ttt_armor_threshold_for_reinforced", 0)
 end
 
 function plymeta:AS_GetRoleColor()
@@ -63,19 +84,23 @@ end
 -- handle client <-> server syncing
 if CLIENT then
 	net.Receive("ttt2_net_aspectator_update_weapon", function()
-		local client = net.ReadEntity()
+		local ply = net.ReadEntity()
 
-		if not client or not IsValid(client) then return end
+		if not IsValid(ply) then return end
 
-		client:AS_UpdateWeapon(net.ReadInt(16), net.ReadInt(16), net.ReadInt(16))
+		ply:AS_UpdateWeapon(
+			net.ReadInt(16),
+			net.ReadInt(16),
+			net.ReadInt(16)
+		)
 	end)
 
 	net.Receive("ttt2_net_aspectator_update_role", function()
-		local client = net.ReadEntity()
+		local ply = net.ReadEntity()
 
-		if not client or not IsValid(client) then return end
+		if not IsValid(ply) then return end
 
-		client:AS_UpdateRole(
+		ply:AS_UpdateRole(
 			net.ReadUInt(ROLE_BITS),
 			{
 				r = net.ReadUInt(8),
@@ -84,5 +109,13 @@ if CLIENT then
 				a = net.ReadUInt(8)
 			}
 		)
+	end)
+
+	net.Receive("ttt2_net_aspectator_update_armor", function()
+		local ply = net.ReadEntity()
+
+		if not IsValid(ply) then return end
+
+		ply:AS_UpdateArmor(net.ReadInt(16))
 	end)
 end
