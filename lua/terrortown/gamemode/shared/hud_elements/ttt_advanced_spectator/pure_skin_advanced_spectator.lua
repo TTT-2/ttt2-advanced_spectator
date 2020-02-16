@@ -131,7 +131,7 @@ if CLIENT then -- CLIENT
 		-- health bar
 		local health = math.max(0, tgt:Health())
 
-		self:DrawBar(bx, by, bw, bh, color_health, health / math.max(0, tgt:GetMaxHealth()), self.scale, "HEALTH: " .. health)
+		self:DrawBar(bx, by, bw, bh, color_health, health / math.max(0, tgt:GetMaxHealth()), self.scale, string.upper(LANG.GetTranslation("hud_health")) .. ": " .. health)
 
 		-- draw armor information
 		local armor = tgt:AS_GetArmor()

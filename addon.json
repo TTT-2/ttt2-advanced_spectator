@@ -1,0 +1,11 @@
+{
+	"title"		:	"[TTT2] Advanced Spectator",
+	"type"		:	"effects",
+    "tags"		:	[ "realism", "fun" ],
+    "ignore"    : [
+        ".git/*",
+        ".gitignore",
+        "README.md",
+		"ttt2-aspectator.jpg"
+    ]
+}
