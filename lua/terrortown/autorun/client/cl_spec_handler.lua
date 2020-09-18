@@ -25,20 +25,7 @@ if CLIENT then
 	end
 
 	-- ADMIN ONLY TOGLLEABLE WALLHACK
-
-	hook.Add("Initialize", "ttt2_aspectator_lang_and_bind", function()
-		LANG.AddToLanguage("English", "ttt2_aspectator_wallhack", "Toggle Admin Wallhack")
-		LANG.AddToLanguage("Deutsch", "ttt2_aspectator_wallhack", "Schalte Admin-Wallhack um")
-		LANG.AddToLanguage("Español", "ttt2_aspectator_wallhack", "Activar Wallhack de Administrador")
-
-		LANG.AddToLanguage("English", "ttt2_aspectator_started_wallack", "Started admin only wallhack.")
-		LANG.AddToLanguage("Deutsch", "ttt2_aspectator_started_wallack", "Admin-only Wallhack gestartet.")
-		LANG.AddToLanguage("Español", "ttt2_aspectator_started_wallack", "Wallhack Sólo-Admin activado.")
-
-		LANG.AddToLanguage("English", "ttt2_aspectator_stopped_wallack", "Stopped admin only wallhack.")
-		LANG.AddToLanguage("Deutsch", "ttt2_aspectator_stopped_wallack", "Admin-only Wallhack gestoppt.")
-		LANG.AddToLanguage("Español", "ttt2_aspectator_stopped_wallack", "Wallhack Sólo-Admin desactivado.")
-
+	hook.Add("Initialize", "ttt2_aspectator_bind", function()
 		bind.Register("ttt2_aspectator_wallhack", function()
 			if not GetGlobalBool("ttt_aspectator_admin_wallhack") then return end
 
@@ -54,6 +41,7 @@ if CLIENT then
 
 			if ASPECTATOR.admin_wallhack_enabled then
 				text = LANG.GetTranslation("ttt2_aspectator_started_wallack")
+
 				for _, p in pairs(player.GetAll()) do
 					ASPECTATOR:AddStencil(p, p:AS_GetRoleColor(), true)
 				end
