@@ -1,4 +1,4 @@
-local L = LANG.GetLanguageTableReference("deutsch")
+local L = LANG.GetLanguageTableReference("de")
 
 L["ttt2_aspectator_wallhack"] = "Schalte Admin-Wallhack um"
 L["ttt2_aspectator_started_wallack"] = "Admin-only Wallhack gestartet."
