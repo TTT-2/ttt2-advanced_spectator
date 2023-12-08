@@ -14,6 +14,11 @@ if CLIENT then -- CLIENT
 	local icon_armor = Material("vgui/ttt/hud_armor")
 	local icon_armor_rei = Material("vgui/ttt/hud_armor_reinforced")
 
+	local icon_health = Material("vgui/ttt/hud_health.vmt")
+	local icon_health_low = Material("vgui/ttt/hud_health_low.vmt")
+
+	local mat_tid_ammo = Material("vgui/ttt/tid/tid_ammo")
+
 	local color_health = Color(234, 41, 41)
 	local color_ammo = Color(238, 151, 0)
 
@@ -125,13 +130,32 @@ if CLIENT then -- CLIENT
 		local by = y + ((show_role == true) and self.rolesize or 0) + self.padding
 
 		local bw = w - ((show_role == true) and self.rolesize or 0) - self.padding * 2 -- bar width
-		local bh = 26 * self.scale --  bar height
+		local bh = 26 * self.scale -- bar height
 		local spc = 7 * self.scale -- space between bars
 
 		-- health bar
 		local health = math.max(0, tgt:Health())
+		local max_health = math.max(0, tgt:GetMaxHealth())
 
-		self:DrawBar(bx, by, bw, bh, color_health, health / math.max(0, tgt:GetMaxHealth()), self.scale, string.upper(LANG.GetTranslation("hud_health")) .. ": " .. health)
+		local health_icon = icon_health
+
+		if health <= max_health * 0.25 then
+			health_icon = icon_health_low
+		end
+
+		self:DrawBar(bx, by, bw, bh, color_health, health / max_health, self.scale)
+
+		local a_size = bh - math.Round(11 * self.scale)
+		local a_pad = math.Round(5 * self.scale)
+
+		local a_pos_y = by + a_pad
+		local a_pos_x = bx + (a_size / 2)
+
+		local at_pos_y = by + 1
+		local at_pos_x = a_pos_x + a_size + a_pad
+
+		draw.FilteredShadowedTexture(a_pos_x, a_pos_y, a_size, a_size, health_icon, 255, COLOR_WHITE, self.scale)
+		draw.AdvancedText(health, "PureSkinBar", at_pos_x, at_pos_y, util.GetDefaultColor(color_health), TEXT_ALIGN_LEFT, TEXT_ALIGN_LEFT, true, self.scale)
 
 		-- draw armor information
 		local armor = tgt:AS_GetArmor()
@@ -139,14 +163,8 @@ if CLIENT then -- CLIENT
 		if not GetGlobalBool("ttt_armor_classic", false) and armor > 0 then
 			local icon_mat = tgt:AS_ArmorIsReinforced() and icon_armor_rei or icon_armor
 
-			local a_size = bh - math.Round(11 * self.scale)
-			local a_pad = math.Round(5 * self.scale)
-
-			local a_pos_y = by + a_pad
-			local a_pos_x = bx + bw - math.Round(65 * self.scale)
-
-			local at_pos_y = by + 1
-			local at_pos_x = a_pos_x + a_size + a_pad
+			a_pos_x = bx + bw - math.Round(65 * self.scale)
+			at_pos_x = a_pos_x + a_size + a_pad
 
 			draw.FilteredShadowedTexture(a_pos_x, a_pos_y, a_size, a_size, icon_mat, 255, COLOR_WHITE, self.scale)
 
@@ -158,8 +176,17 @@ if CLIENT then -- CLIENT
 
 		if clip ~= -1 then
 			local text = string.format("%i + %02i", clip, ammo)
+			local icon_mat = BaseClass.BulletIcons[ammo_type] or mat_tid_ammo
 
-			self:DrawBar(bx, by + bh + spc, bw, bh, color_ammo, clip / clip_max, self.scale, text)
+			self:DrawBar(bx, by + bh + spc, bw, bh, color_ammo, clip / clip_max, self.scale)
+
+			a_pos_x = nx + (a_size / 2)
+			a_pos_y = ty + a_pad
+			at_pos_y = ty + 1
+			at_pos_x = a_pos_x + a_size + a_pad
+
+			draw.FilteredShadowedTexture(a_pos_x, a_pos_y, a_size, a_size, icon_mat, 255, COLOR_WHITE, t_scale)
+			draw.AdvancedText(text, "PureSkinBar", at_pos_x, at_pos_y, util.GetDefaultColor(color_ammoBar), TEXT_ALIGN_LEFT, TEXT_ALIGN_LEFT, true, t_scale)
 		end
 
 		-- draw border and shadow
