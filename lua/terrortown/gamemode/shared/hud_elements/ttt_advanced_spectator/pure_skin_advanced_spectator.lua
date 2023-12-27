@@ -181,13 +181,13 @@ if CLIENT then -- CLIENT
 
 			self:DrawBar(bx, by + bh + spc, bw, bh, color_ammo, clip / clip_max, self.scale)
 
-			a_pos_x = nx + (a_size / 2)
+			a_pos_x = bx + (a_size / 2)
 			a_pos_y = by + bh + spc + a_pad
 			at_pos_y = by + bh + spc + 1
 			at_pos_x = a_pos_x + a_size + a_pad
 
 			draw.FilteredShadowedTexture(a_pos_x, a_pos_y, a_size, a_size, icon_mat, 255, COLOR_WHITE, self.scale)
-			draw.AdvancedText(text, "PureSkinBar", at_pos_x, at_pos_y, util.GetDefaultColor(color_ammoBar), TEXT_ALIGN_LEFT, TEXT_ALIGN_LEFT, true, self.scale)
+			draw.AdvancedText(text, "PureSkinBar", at_pos_x, at_pos_y, util.GetDefaultColor(color_ammo), TEXT_ALIGN_LEFT, TEXT_ALIGN_LEFT, true, self.scale)
 		end
 
 		-- draw border and shadow
