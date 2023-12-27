@@ -8,10 +8,11 @@ end
 
 local plymeta = FindMetaTable("Player")
 
-function plymeta:AS_UpdateWeapon(clip, clip_max, ammo)
+function plymeta:AS_UpdateWeapon(clip, clip_max, ammo, ammo_type)
 	self.as_wep_clip = clip
 	self.as_wep_clip_max = clip_max
 	self.as_wep_ammo = ammo
+	self.as_wep_ammo_type = ammo_type
 
 	-- send data to client
 	if SERVER then
@@ -20,6 +21,7 @@ function plymeta:AS_UpdateWeapon(clip, clip_max, ammo)
 		net.WriteInt(clip, 16)
 		net.WriteInt(clip_max, 16)
 		net.WriteInt(ammo, 16)
+		net.WriteInt(ammo_type, 16)
 		net.Broadcast()
 	end
 end
@@ -54,7 +56,7 @@ function plymeta:AS_UpdateRole(role, color)
 end
 
 function plymeta:AS_GetWeapon()
-	return self.as_wep_clip or -1, self.as_wep_clip_max or -1, self.as_wep_ammo or -1
+	return self.as_wep_clip or -1, self.as_wep_clip_max or -1, self.as_wep_ammo or -1, self.as_wep_ammo_type or -1
 end
 
 function plymeta:AS_GetArmor()
@@ -89,6 +91,7 @@ if CLIENT then
 		if not IsValid(ply) then return end
 
 		ply:AS_UpdateWeapon(
+			net.ReadInt(16),
 			net.ReadInt(16),
 			net.ReadInt(16),
 			net.ReadInt(16)
