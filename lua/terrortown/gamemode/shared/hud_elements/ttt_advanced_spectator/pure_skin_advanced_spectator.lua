@@ -172,7 +172,8 @@ if CLIENT then -- CLIENT
 		end
 
 		-- Draw ammo
-		local clip, clip_max, ammo = tgt:AS_GetWeapon()
+		local clip, clip_max, ammo, ammo_type = tgt:AS_GetWeapon()
+		ammo_type = string.lower(game.GetAmmoTypes()[ammo_type])
 
 		if clip ~= -1 then
 			local text = string.format("%i + %02i", clip, ammo)

@@ -7,22 +7,24 @@ ASPECTATOR = {}
 function ASPECTATOR:CheckForWeaponChange(ply, weapon)
 	if not IsValid(ply) or not IsValid(weapon) then return end
 
-	local wep_clip, wep_clip_max, wep_ammo = ply:AS_GetWeapon()
-	local wep_clip_new, wep_clip_max_new, wep_ammo_new = weapon:Clip1(), weapon:GetMaxClip1(), weapon:Ammo1()
+	local wep_clip, wep_clip_max, wep_ammo, wep_ammo_type = ply:AS_GetWeapon()
+	local wep_clip_new, wep_clip_max_new, wep_ammo_new, wep_ammo_type_new = weapon:Clip1(), weapon:GetMaxClip1(), weapon:Ammo1(), weapon:GetPrimaryAmmoType()
 
 	-- check if values are numbers (e.g. snowball has a boolean for ammo)
 	if type(wep_clip_new) ~= "number" then wep_clip_new = -1 end
 	if type(wep_clip_max_new) ~= "number" then wep_clip_max_new = -1 end
 	if type(wep_ammo_new) ~= "number" then wep_ammo_new = -1 end
+	if type(wep_ammo_type_new) ~= "number" then wep_ammo_type_new = -1 end
 
 	-- make sure all values are integers
 	wep_clip_new = math.floor(wep_clip_new)
 	wep_clip_max_new = math.floor(wep_clip_max_new)
 	wep_ammo_new = math.floor(wep_ammo_new)
+	wep_ammo_type_new = math.floor(wep_ammo_type_new)
 
 	-- a value has changed
-	if wep_clip ~= wep_clip_new or wep_clip_max ~= wep_clip_max_new or wep_ammo ~= wep_ammo_new then
-		ply:AS_UpdateWeapon(wep_clip_new, wep_clip_max_new, wep_ammo_new)
+	if wep_clip ~= wep_clip_new or wep_clip_max ~= wep_clip_max_new or wep_ammo ~= wep_ammo_new or wep_ammo_type ~= wep_ammo_type_new then
+		ply:AS_UpdateWeapon(wep_clip_new, wep_clip_max_new, wep_ammo_new, wep_ammo_type_new)
 	end
 end
 
@@ -106,7 +108,7 @@ hook.Add("TTT2PlayerReady", "ttt2_aspectator_player_ready", function(ply)
 			-- set current weapon data
 			local weapon = p:GetActiveWeapon()
 			if weapon and IsValid(weapon) then
-				p:AS_UpdateWeapon(weapon:Clip1(), weapon:GetMaxClip1(), weapon:Ammo1())
+				p:AS_UpdateWeapon(weapon:Clip1(), weapon:GetMaxClip1(), weapon:Ammo1(), weapon:GetPrimaryAmmoType())
 			end
 		end
 	end
