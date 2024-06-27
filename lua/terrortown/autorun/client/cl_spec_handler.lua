@@ -65,7 +65,7 @@ if CLIENT then
 		if not ASPECTATOR.admin_wallhack_enabled then return end
 
 		for _, p in pairs(player.GetAll()) do
-			DrawOverheadRoleIcon(p, p:AS_GetRoleData().iconMaterial, p:AS_GetRoleColor())
+			DrawOverheadRoleIcon(client, p, p:AS_GetRoleData().iconMaterial, p:AS_GetRoleColor())
 		end
 	end)
 
